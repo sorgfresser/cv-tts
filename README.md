@@ -13,9 +13,9 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-Run the main script with the directory containing the Common Voice dataset files and the output directory for the filtered dataset as arguments. You can also specify the minimum MOS for a speaker to be included in the dataset with the --mos_threshold option. For example:
+Run the main script with the directory containing the Common Voice dataset files and the output directory for the filtered dataset as arguments. You can also specify the minimum MOS for a speaker to be included in the dataset with the --mos-threshold option as well as a target sample rate using --sample-rate. For example:
 ```bash
-python src/main.py /path/to/cv_dir /path/to/output_dir --mos_threshold 3.0
+python src/main.py /path/to/cv_dir /path/to/output_dir --mos_threshold 3.0 --sample-rate 22050
 ```
 
 ## Contributing

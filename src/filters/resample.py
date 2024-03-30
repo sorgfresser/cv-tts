@@ -7,9 +7,11 @@ SAMPLE_RATE = 16000  # 16kHz, same as paper
 dBFS = -50  # same as paper
 
 
-def mp3_to_wav(clip: Clip, output_dir: Path | None = None) -> Clip:
+def mp3_to_wav(
+    clip: Clip, output_dir: Path | None = None, sample_rate: int = SAMPLE_RATE
+) -> Clip:
     audio_seg = AudioSegment.from_mp3(clip.filepath)
-    audio_seg.set_frame_rate(16000)
+    audio_seg.set_frame_rate(sample_rate)
     filepath = clip.filepath if output_dir is None else output_dir / clip.filepath.name
     audio_seg.export(filepath.with_suffix(".wav"), format="wav")
     updated = copy(clip)

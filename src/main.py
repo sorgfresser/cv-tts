@@ -40,10 +40,16 @@ if __name__ == "__main__":
         "output_dir", type=str, help="Output directory for the filtered dataset"
     )
     parser.add_argument(
-        "--mos_threshold",
+        "--mos-threshold",
         type=float,
         default=3.0,
         help="Minimum MOS for a speaker to be included in the dataset, should be between 1.0 and 4.0",
+    )
+    parser.add_argument(
+        "--sample-rate",
+        type=int,
+        default=16_000,
+        help="Sample rate to resample the clips to, usual options are 16000, 22050, 44100",
     )
     args = parser.parse_args()
     # Assert user input is valid
@@ -80,7 +86,9 @@ if __name__ == "__main__":
 
     logger.info("Converting clips to wav")
     wav_clips = {
-        str(clip.filepath.absolute()): mp3_to_wav(clip, output_clip_dir)
+        str(clip.filepath.absolute()): mp3_to_wav(
+            clip, output_clip_dir, args.sample_rate
+        )
         for clip in tqdm(clips.values())
     }
     logger.info("Removing silence from clips")
