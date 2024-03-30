@@ -15,7 +15,11 @@ def get_mos(clip: Clip) -> None:
     :param clip: The clip to get the MOS of
     :return: None
     """
-    mos = model.calculate_one(clip.filepath)
+    try:
+        mos = model.calculate_one(clip.filepath)
+    except RuntimeError as e:
+        logger.error("Error calculating MOS for %s: %s", clip.filepath, e)
+        raise e
     if mos < 0:
         logger.warning(
             f"MOS for {clip.filepath} is negative: {mos}, you may want to check the audio file."
@@ -31,8 +35,22 @@ def get_mos_for_clients(clients: dict[str, Client]) -> None:
     :return: None
     """
     for client in tqdm(clients.values()):
-        for clip in client.clips:
-            get_mos(clip)
+        clip_idx = 0
+        while clip_idx < len(client.clips):
+            try:
+                get_mos(client.clips[clip_idx])
+            except RuntimeError:
+                logger.error("Skipping clip %s", client.clips[clip_idx].filepath)
+                del client.clips[clip_idx]
+                continue
+            clip_idx += 1
+
+        if len(client.clips) == 0:
+            logger.warning(
+                "Speaker %s has no clips with MOS, setting MOS to 0", client.client_id
+            )
+            client.mos = 0
+            continue
 
         client.mos = sum(clip.mos for clip in client.clips) / len(
             client.clips
