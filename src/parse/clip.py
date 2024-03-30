@@ -54,7 +54,7 @@ def clients_for_clips(clips: list[Clip]) -> dict[str, Client]:
 
 
 def parse_clip(line: str, reference_dir: Path | None = None) -> Clip:
-    parts = line.split("\t")
+    parts = line.removesuffix("\n").split("\t")
     return Clip(
         Path(parts[1]) if reference_dir is None else reference_dir / parts[1],
         -1,
@@ -82,7 +82,7 @@ def parse_clips(lines: list[str], reference_dir: Path | None = None) -> dict[str
 
 def add_durations(lines: list[str], clips: dict[str, Clip]) -> None:
     for line in lines:
-        parts = line.split("\t")
+        parts = line.removesuffix("\n").split("\t")
         filepath = Path(parts[0])
         if str(filepath.absolute()) in clips:
             clips[str(filepath.absolute())].duration_ms = int(parts[1])

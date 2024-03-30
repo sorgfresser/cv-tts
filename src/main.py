@@ -115,6 +115,6 @@ if __name__ == "__main__":
         duration_f.write("clip\tduration[ms]\n")
         for client in clients.values():
             for clip in client.clips:
-                train_f.write(clip.to_tsv_train() + '\n')
-                duration_f.write(clip.to_tsv_duration() + '\n')
+                train_f.write(clip.to_tsv_train() + "\n")
+                duration_f.write(clip.to_tsv_duration() + "\n")
     logger.info("Done")
